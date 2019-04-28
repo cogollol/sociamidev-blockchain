@@ -13,10 +13,144 @@ import '~/src/theme/css/achievement.css';
 class Achievement extends React.Component {
   constructor(props) {
     super(props);
+    this.index = 0;
+    
   }
 
+
+  showNextAchievement() {
+    let totalAchievements = this.props.achievementData.updatedAchievements.length;
+    if(this.index == totalAchievements - 1) {
+      return;
+    }
+    if(this.props.achievementData) {
+    this.index = this.index + 1;
+    this.achievementDetails = this.getDetailsAchievment();
+  }
+  }
+
+    showPreviousAchievement() {
+      if(this.index == 0) {
+        return;
+      }
+    if(this.props.achievementData) {
+    this.index = this.index - 1;
+    this.achievementDetails = this.getDetailsAchievment();
+  }
+  }
+
+  getDetailsAchievment() {
+
+    let data = {};
+      let {updatedAchievements}= this.props.achievementData;
+      let {userAchievementResult} = this.props.achievementData;
+      let {result} = this.props.achievementData;
+    if (updatedAchievements && updatedAchievements.length) {
+      let updates = updatedAchievements[this.index]; // for now take only 1
+      let achievementsInfo = userAchievementResult.achievements.filter(
+        info => info.achievementId === updates._id,
+      );
+      let achievementDescription = result.filter(
+        info => info._id === updates._id,
+      );
+      updates = { ...updates, conditions: achievementsInfo[0].conditions };
+
+      data = {
+        ...updates,
+        countProgress: updates.conditions[0].counter,
+        countComplete: updates.conditions[0].count,
+        displayName: updates.name,
+        displayProgressVsComplete: this._getProgress(updates),
+        generic: false,
+        id: updates._id,
+        description: achievementDescription[0].description
+      };
+    }
+
+    return data;
+  }
+
+  _getProgress(updates) {
+    let data = [];
+    let length = updates.conditions.length;
+    for (let i=0; i<length; i++){
+    let num1 = updates.conditions[i].counter,
+      num2 = updates.conditions[i].count;
+      if (!num1) {
+        num1 = 1;
+      }
+    if (num1 === num2) {
+      data.push(`${updates.conditions[i].taskType} Complete!`);
+    } else {
+    data.push(this._getPercentProgress(updates, i));
+  }
+  }
+    return data;
+  }
+
+  _getPercentProgress(updates, i) {
+    let num1 = updates.conditions[i].counter,
+      num2 = updates.conditions[i].count;
+      if (!num1) {
+        num1 = 1;
+      }
+    let mathFloor = ~~((num1 / num2) * 100);
+    let taskType = updates.conditions[i].taskType;
+    if(!taskType) {
+      taskType = updates.conditions[i].type;
+    }
+
+    return `${num1}/${num2} ${taskType} - ${mathFloor}% Complete!`;
+  }
+
+  getDisplayName() {
+    if(this.index == 0) {
+    return this.props.achievementDetails.displayName;
+  }
+   return this.achievementDetails.displayName;
+}
+
+getPercentage(value) {
+    if(this.index == 0) {
+    return this.props.achievementDetails.displayProgressVsComplete;
+  }
+   return this.achievementDetails.displayProgressVsComplete[value];
+}
+
+getDescription() {
+  if(this.index == 0) {
+    return this.props.achievementDetails.description;
+  }
+   return this.achievementDetails.description;
+}
+
+getId() {
+  if(this.index == 0) {
+    return this.props.achievementDetails.id;
+  }
+   return this.achievementDetails.id;
+}
+
+showNext() {
+
+  if (this.props.achievementData && this.props.achievementData.updatedAchievements) {
+let totalAchievements = this.props.achievementData.updatedAchievements.length;
+    if(this.index < totalAchievements - 1) {
+      return true;
+    } else {
+      return false;
+    }
+    } else {
+      return true;
+    }
+}
+
+
   render() {
-    const { isOpen, close, achievementDetails } = this.props;
+    const { isOpen, close } = this.props;
+    const imageStyle = {
+      backgroundImage: `url(https://s3.us-east-2.amazonaws.com/admin.soqqle.com/achievementImages/${this.getId()})`
+    }
     const modalStyleOverrides = {
       overlay: {
         backgroundColor: 'rgba(0, 0, 0, 0.85)',
@@ -35,17 +169,22 @@ class Achievement extends React.Component {
     };
     return (
       <Modal isOpen={isOpen} style={modalStyleOverrides} onRequestClose={close}>
-        <div className="achievement-modal modal-popup">
+        <div className="achievement-modal modal-popup ach-modal">
           <div className="achievement-container">
             <div className="achievement-wrapper">
-              <div className="center-wrapper">
-                <ActionLink href="#" className="modal-close-button" onClick={close} />
+              <ActionLink href="#" className="modal-close-button achievement__modal-close-button" onClick={close} />
+              <div role="img" style={imageStyle} className="achievement-top-img"></div>
+              <div className="center-wrapper ach-content">
+              {this.index > 0 ? <div class="QuestionAnswersFlow-previous"><a href="#" onClick={()=>this.showPreviousAchievement()} className="ach-previous" class="btn-prev QuestionAnswersFlow-previous">◀ previous</a></div> : null}
+              {this.showNext() ? <div class="QuestionAnswersFlow-next QuestionAnswersFlow-next-block"><a href="#" onClick={()=>this.showNextAchievement()} className="ach-next" class="btn-next QuestionAnswersFlow-next">next ▶</a></div> : null}
                 <div className="content-wp">
-                  <h6 className="yellow-text">{achievementDetails.displayProgressVsComplete}</h6>
-                  <h4>{achievementDetails.displayName}</h4>
+                
+                  <h6 className="yellow-text">{this.getPercentage(0)}</h6>
+                 {this.index > 0 && this.getPercentage(1) ? <h6 className="yellow-text prog-percent">{this.getPercentage(1)}</h6> : null}
+                  
+                  <h4 className="ach-heading">{this.getDisplayName()}</h4>
                   <p>
-                    The Innovator quickly flies into action and arrives at the signal. The Chief of Police is
-                    there and tells him that the nefarious Shadow Professor has struck again
+                    {this.getDescription()}
                   </p>
                 </div>
               </div>

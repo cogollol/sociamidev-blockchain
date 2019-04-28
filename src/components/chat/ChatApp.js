@@ -404,26 +404,6 @@ class ChatApp extends React.Component {
           isChatHolder={this.state.isChatHolder}
           toggleChatHolder={()=>this.toggleChatHolder()}
         />
-        {/* <div className={divMainClasses} style={{'display':'none'}}>
-          <div className="chatapp-container">
-            <div className="chatapp-userContainer" id="userContainer">
-              <Users users={this.state.users} selectedUser={this.state.activeUserID} selectedUserFullName={this.state.activeUserFullName} lastMessageRec={lastMessageRec} lastMessages={this.state.lastMessageStack} unreadCount={this.state.unreadCountStack} onTab={(activeUserID,activeUserFullname)=>this.tabChanges(activeUserID,activeUserFullname)} checkUserWin={(usersWindowOpen)=>this.toggleUserWindow(usersWindowOpen)} tabClose={this.state.tabClose} openWindow={this.state.openWindow} />
-            </div>
-            <div className={divChatClasses} id="chatContainer">
-              <div className="topName">
-                <span>To: <span id="activeUserName">{active}</span></span>
-                <span className="close-chat" id="close-chat" 
-                onClick={()=>this.closeChatWindow()}>x</span>
-              </div>
-              <div id="test" className="messages">
-                {componentMessages}
-              </div>
-              <div id="msgBox" className="write-container">
-                <ChatInput onSend={(message)=>this.sendHandler(message)} />
-              </div>
-            </div>
-          </div>
-        </div> */}
         <div className="popout">
           <div className={`${chatHolderButtonClass} new-chat-btn`} onClick={() => this.toggleChatHolder()}>
             <i className="fa fa-comments" />

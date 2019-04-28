@@ -406,9 +406,13 @@ export function fetchUserProfile(userIdFacebook, userIdLinkedIn, id) {
       url = `${ConfigMain.getBackendURL()}/fetchUserProfileById?id=${id}`;
     }
 
+    const userAchievementsUrl = `${ConfigMain.getBackendURL()}/userAchievement/${id}`;
+
     return Axios.get(url)
       .then(function(response) {
         const responseProfile = response.data.profile;
+      Axios.get(userAchievementsUrl)
+        .then(function(userAchievements) {
         let newUserProfile = {
           _id: response.data._id,
           hangouts: response.data.hangouts,
@@ -417,7 +421,8 @@ export function fetchUserProfile(userIdFacebook, userIdLinkedIn, id) {
           progressionTrees: response.data.progressionTrees,
           connectionDetails: response.data.connectionDetails,
           facebook: response.data.facebook,
-          facebookID: response.data.facebookID
+          facebookID: response.data.facebookID,
+          userAchievements: userAchievements.data
         };
 
         newUserProfile = Object.assign({}, newUserProfile, { ...responseProfile });
@@ -426,6 +431,8 @@ export function fetchUserProfile(userIdFacebook, userIdLinkedIn, id) {
           .then(function(response) {
             //async action exit point
             if (response.data && response.data._id) {
+              localStorage.setItem('company_id', response.data._id);
+              localStorage.setItem('company_name', response.data.name);
               dispatch(fetchUserProfileComplete(newUserProfile, true, true, response.data));
             } else {
               dispatch(fetchUserProfileComplete(newUserProfile, true, false));
@@ -434,6 +441,11 @@ export function fetchUserProfile(userIdFacebook, userIdLinkedIn, id) {
           .catch(function(error) {
             dispatch(fetchUserProfileComplete(newUserProfile, true, false));
           });
+      })
+      .catch(function(error) {
+
+      });
+
       })
       .catch(function(error) {
         //async action exit point

@@ -22,6 +22,7 @@ import { Icon } from 'react-fa';
 
 import '~/src/style.css';
 import '~/src/theme/css/main.css';
+import 'antd/dist/antd.css'; 
 
 import ThemeHeader from '~/src/theme/components/themeHeader/ThemeHeader';
 // import SidebarLeft from '~/src/theme/SidebarLeft';
@@ -43,9 +44,10 @@ import SkillBrowser from '~/src/theme/components/progressiontrees/SkillBrowser';
 import Connections from '~/src/theme/components/connections/Connections.js';
 import ConnectionsViewOld from '~/src/theme/ConnectionsViewOld.js';
 import Story from '~/src/theme/components/story/Story';
-import Challenges from '~/src/theme/components/challenges/Challenges';
 // import UserProfile from '~/src/theme/UserProfile.js';
 import UserProfile from '~/src/theme/components/userProfile/UserProfile';
+
+import Admin from '~/src/theme/components/Admin/Admin';
 import Teams from '~/src/theme/components/teams/Teams.js';
 import Company from '~/src/theme/components/company/Company';
 import Achievements from '~/src/theme/components/achievements/Achievements';
@@ -56,6 +58,8 @@ import TermsOfUse from '~/src/theme/new_ui/TermsOfUse';
 import Levels from './theme/components/levels/Levels';
 import Sparks from './theme/components/sparks/Sparks';
 import Tasks from './theme/components/tasks/Tasks';
+
+import Rewards from './theme/components/rewards/Rewards';
 
 class Main extends Component {
   constructor(props) {
@@ -141,11 +145,6 @@ class Main extends Component {
           path="/connectionsView"
           render={routeProps => <ConnectionsViewOld {...routeProps} {...this.props} />}
         />
-        <Route
-          exact
-          path="/challenges"
-          render={routeProps => <Challenges {...routeProps} {...this.props} />}
-        />
         <Route path="/settings" render={routeProps => <Settings {...routeProps} {...this.props} />} />
         <Route
           exact
@@ -158,6 +157,7 @@ class Main extends Component {
           render={routeProps => <PrivacyPolicy {...routeProps} {...this.props} />}
         />
         <Route path="/userProfile" render={routeProps => <UserProfile {...routeProps} {...this.props} />} />
+        <Route path="/admin" render={routeProps => <Admin {...routeProps} {...this.props} />} />
         {this.props.isAdmin && (
           <Route path="/company" render={routeProps => <Company {...routeProps} {...this.props} />} />
         )}
@@ -172,6 +172,8 @@ class Main extends Component {
         <Route path="/tasks" render={routeProps => <Tasks {...routeProps} {...this.props} />} />)}/>
 
         <Route path="/achievements" render={routeProps => <Achievements {...routeProps} {...this.props} />} />)}/>
+
+        <Route path="/rewards" render={routeProps => <Rewards {...routeProps} {...this.props} />} />)}/>
 
       </Switch>
     );

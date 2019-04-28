@@ -16,6 +16,7 @@ import Img from 'react-image';
 import ConfigMain from '~/configs/main';
 import Friends from '~/src/theme/components/userProfile/Friends';
 import Photos from '~/src/theme/components/userProfile/Photos';
+import HouseEdit from './HouseEdit';
 
 import Spinner from '~/src/theme/components/homepage/Spinner';
 import PostList from '~/src/theme/components/homepage/PostList';
@@ -74,6 +75,7 @@ class UserProfile extends Component {
       posts: [],
       loadingPosts: true,
       isAddButtonLoading: false,
+      isHouseEdit:false,
     };
     this.fetchAllConnections = this.fetchAllConnections.bind(this);
     this.fetchPosts = this.fetchPosts.bind(this);
@@ -838,6 +840,23 @@ class UserProfile extends Component {
     );
   }
 
+  handleHouseEditModal() {
+    this.setState({
+      isHouseEdit:!this.state.isHouseEdit,
+    })
+  };
+
+  afterUpdateHouse(data){
+    let character = this.state.character;
+    character.characterId = data._id;
+    character.characterImage = data.imageUrl;
+    character.characterName = data.name;
+    this.setState({
+      isHouseEdit: !this.state.isHouseEdit,
+      character: character
+    })
+  }
+
   render() {
     const { otherTabLoading, friendList } = this.state;
     let traitsNameLine;
@@ -849,7 +868,7 @@ class UserProfile extends Component {
         </li>
       ) : null;
       characterNameLine = this.state.character.characterName ? (
-        <li>
+        <li className="house-edit-icon" onClick={this.handleHouseEditModal.bind(this)}>
           <span className="icon pc-icon" /> {this.state.character.characterName}
         </li>
       ) : null;
@@ -1088,6 +1107,12 @@ class UserProfile extends Component {
             )}
           </div>
         </div>
+        <HouseEdit
+          isHouseEdit={this.state.isHouseEdit}
+          afterUpdateHouse={(data) => this.afterUpdateHouse(data)}
+          handleHouseEditModal={this.handleHouseEditModal.bind(this)}
+          userProfileId={this.props.userProfile._id}
+        />
       </div>
     );
   }

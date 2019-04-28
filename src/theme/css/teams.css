@@ -309,18 +309,135 @@
 }
 
 /*13-10-2018*/
-#questions .table th {
+#questions, #stories {
+    background: none !important;
+}
+#questions .table th, #stories .table th {
     border: 1px solid rgb(6, 144, 247) !important ;
 }
-#questions .table td {
+#questions .table td, #stories .table td {
     border: 1px solid rgb(6, 144, 247) !important ;
 }
-#questions.theme-box-right
-{
+#questions.theme-box-right, #stories.theme-box-right {
     border: none !important;
     box-shadow: none !important;
-    width: 895px !important;
 }
-#questions .table {
+#questions .table, #stories .table {
     margin-bottom: unset !important ;
 }
+#questions .box, #stories .box {
+    background: #111222;
+}
+
+#questions.theme-box-right .pagination, #stories.theme-box-right .pagination{
+    border-radius: 0 !important;
+    border: 1px solid rgb(6, 144, 247) !important;
+    box-shadow: 0px 0px 1px 0.47px rgba(73, 177, 255, 0.53) !important;
+    background: #121212;
+}
+
+#questions.theme-box-right .pagination>li>a, #stories.theme-box-right .pagination>li>a {
+    background-color: #121212 !important;
+    border: none !important;
+    color: #777;
+}
+
+#questions.theme-box-right .pagination>li:first-child>a, #questions.theme-box-right .pagination>li:last-child>a,
+#stories.theme-box-right .pagination>li:first-child>a, #stories.theme-box-right .pagination>li:last-child>a{
+    visibility: hidden;
+}
+
+#questions.theme-box-right .pagination>li:first-child>a::after,
+#stories.theme-box-right .pagination>li:first-child>a::after{
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    display: block;
+    border-right: 6px solid #777;
+    border-top: 4px solid transparent;
+    border-bottom: solid 4px transparent;
+    border-left: 4px solid transparent;
+    top: 11px;
+    left: 9px;
+    visibility: visible;
+}
+
+#questions.theme-box-right .pagination>li:last-child>a::after,
+#stories.theme-box-right .pagination>li:last-child>a::after{
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    display: block;
+    border-left: 6px solid #777;
+    border-top: 4px solid transparent;
+    border-bottom: solid 4px transparent;
+    border-right: 4px solid transparent;
+    top: 11px;
+    right: 9px;
+    visibility: visible;
+}
+
+#questions.theme-box-right .pagination>.active>a, #questions.theme-box-right .pagination>.active>a:hover,
+#stories.theme-box-right .pagination>.active>a, #stories.theme-box-right .pagination>.active>a:hover {
+    z-index: 3;
+    color: #9601a3 !important;
+    cursor: default;
+}
+
+#questions.theme-box-right .pagination>.active>a::after, #stories.theme-box-right .pagination>.active>a::after{
+    content: "";
+    position: absolute;
+    background: #9601a3;
+    box-shadow: 0 3px 5px #9601a3, 0 0px 3px #9601a3;
+    height: 2px;
+    top: 23px;
+    left: 6px;
+    right: 6px;
+    z-index: 3;
+}
+
+.preload-button{
+    color: #f04134;
+    border-bottom: 1px solid;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.admin-list {
+    margin-left: 0px !important;
+}
+
+.react-datepicker-popper {
+    z-index: 100000 !important;
+}
+
+.react-tagsinput {
+    border: 1px solid #0091fa !important;
+    background: #131313 !important;
+}
+
+.react-tagsinput-tag {
+    background-color: #FFC700 !important;
+    border: 1px solid #02040e !important;
+    color: #1d419a !important;
+    font-size: 14px !important;
+    font-family: inherit !important;
+}
+
+.tags-margin {
+  margin-bottom: 10px;
+}
+
+.form-input-admin {
+  color: #d1d1d1 !important;
+}
+
+.react-tagsinput-input {
+  font-family: inherit !important;
+    color: #555 !important;
+    font-size: 12px !important;
+}
+

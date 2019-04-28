@@ -14,8 +14,6 @@ import ConfigMain from '~/configs/main';
 
 import PropTypes from 'prop-types';
 
-import LeftNav from '~/src/theme/components/homepage/LeftNav';
-import RightSection from '~/src/theme/components/homepage/RightSection';
 import RightAnswerSection from '~/src/theme/components/homepage/RightAnswerSection';
 import MyTasks from '~/src/theme/components/tasks/MyTasks';
 
@@ -197,7 +195,7 @@ class Tasks extends React.Component {
           <div className="col-box-wp col-box-join-task">
             <p className="task-desc">
               <a className="link-yellow">{task.creator.firstName}</a> is looking to discuss
-              <a className="link-yellow"> {task.metaData.subject.roadmap.name} </a>
+              <a className="link-yellow"> {task.metaData.subject.roadmap ? task.metaData.subject.roadmap.name : ''} </a>
               at <a className="link-yellow"> {time}.</a>
             </p>
             <a className="btn-join task-join" onClick={() => this.handleOpenConfirmTaskDetailsPopup(task)}>
@@ -649,6 +647,7 @@ class Tasks extends React.Component {
       this.setState({
         shouldAchievementModalbeOpen: true,
         achievementDetails: this._selectAchievementDetails(returnData),
+        achievementData: returnData
       });
     }
   }
@@ -692,11 +691,14 @@ class Tasks extends React.Component {
 
   _selectAchievementDetails(returnData) {
     let data = {},
-      { updatedAchievements, userAchievementResult } = returnData;
+      { updatedAchievements, userAchievementResult, result } = returnData;
     if (updatedAchievements && updatedAchievements.length) {
       let updates = updatedAchievements[0]; // for now take only 1
       let achievementsInfo = userAchievementResult.achievements.filter(
         info => info.achievementId === updates._id,
+      );
+      let achievementDescription = result.filter(
+        info => info._id === updates._id,
       );
       updates = { ...updates, conditions: achievementsInfo[0].conditions };
 
@@ -705,8 +707,10 @@ class Tasks extends React.Component {
         countProgress: updates.conditions[0].counter,
         countComplete: updates.conditions[0].count,
         displayName: updates.name,
+        id: updates._id,
         displayProgressVsComplete: `${this._getProgress(updates)}`,
         generic: false,
+        description: achievementDescription[0].description
       };
     }
 
@@ -717,7 +721,7 @@ class Tasks extends React.Component {
     const num1 = updates.conditions[0].counter,
       num2 = updates.conditions[0].count;
     if (num1 === num2) {
-      return `Complete!`;
+      return `${updates.conditions[0].taskType} Complete!`;
     }
 
     return this._getPercentProgress(updates);
@@ -728,11 +732,12 @@ class Tasks extends React.Component {
       num2 = updates.conditions[0].count;
     const mathFloor = ~~((num1 / num2) * 100);
 
-    return `${num1}/${num2} - ${mathFloor}% Complete!`;
+    return `${num1}/${num2} ${updates.conditions[0].taskType} - ${mathFloor}% Complete!`;
   }
 
   render() {
     const { achievementDetails } = this.state;
+    const { achievementData } = this.state;
     const myTasks = this.getMyTasksAndHangouts();
 
     const tasksScanner = this.getTaskScannerTasks();
@@ -751,26 +756,9 @@ class Tasks extends React.Component {
           <div className="container">
             <div className="row">
               <div className="row">
-                {!this.props.activeHangout ? (
-                  <LeftNav
-                    accounting={this.props.accounting}
-                    userProfile={this.props.userProfile}
-                    profilePic={
-                      this.props.userProfile.pictureURL ? this.props.userProfile.pictureURL : profilePic
-                    }
-                  />
-                ) : null
-                }
-
                 {this.props.activeHangout ? (
                   <RightAnswerSection getLoadURL={url => this.getLoadURL(url)} />
-                ) : (
-                  <RightSection
-                    skills={this.props.skills}
-                    roadmapsAdmin={this.props.roadmapsAdmin}
-                    userProfile={this.props.userProfile}
-                  />
-                )}
+                ) : null}
                 {this.props.activeHangout ? (
                   <AnswerQuestions
                     currentTask={this.props.activeHangout}
@@ -844,6 +832,7 @@ class Tasks extends React.Component {
                 achievementDetails={achievementDetails}
                 isOpen={this.state.shouldAchievementModalbeOpen}
                 close={this.closeAchievementModal}
+                achievementData={achievementData}
               />
             </div>
           </div>

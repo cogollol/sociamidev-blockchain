@@ -15,14 +15,19 @@ class Connections extends React.Component {
     super(props);
     this.state = {
       activeTabName: 'All',
+      sourceAllFriends: [],
       allFriendList: [],
+      sourceReceived: [],
       receivedList: [],
+      sourceSent: [],
       sentList: [],
+      sourceFriend: [],
       friendList: [],
       facebookFriends: [],
       allTabLoading: false,
       otherTabLoading: false,
       skip: 0,
+      searchValue: '',
       moreSoqqlersToFetch: true,
     };
     this.fetchAllConnections = this.fetchAllConnections.bind(this);
@@ -35,7 +40,16 @@ class Connections extends React.Component {
   componentDidMount() {
     this.fetchAllConnections();
     this.fetchMoreSoqqlers();
-    this.fetchFacebookFriends();        
+    this.fetchFacebookFriends();       
+    this.searchByEnter(); 
+  }
+
+  searchByEnter(){
+    document.addEventListener('keydown', (e) => {
+        if(e.keyCode == 13) {
+          this.searchConnection(this.state.activeTabName);
+        }
+     })
   }
 
   handleFriendRequest(user, action) {
@@ -67,7 +81,8 @@ class Connections extends React.Component {
     }).then(function(response) {        
       if (response.data === 'success') {
         that.setState(prevState => ({
-          allFriendList: prevState.allFriendList.filter(el => el.id !== userid)
+          allFriendList: prevState.allFriendList.filter(el => el.id !== userid),
+          sourceAllFriends: prevState.allFriendList.filter(el => el.id !== userid)
         }));
         that.fetchAllConnections();
       }
@@ -113,7 +128,8 @@ class Connections extends React.Component {
           allTabLoading: false,
           moreSoqqlersToFetch: true,
           skip: prevSkip + response.data.length,
-          allFriendList: prevSoqList.concat(response.data) 
+          allFriendList: prevSoqList.concat(response.data),
+          sourceAllFriends: prevSoqList.concat(response.data)
         });
       } else {
         that.setState({ moreSoqqlersToFetch: false, allTabLoading: false });
@@ -144,8 +160,11 @@ class Connections extends React.Component {
       });
       self.setState({
         otherTabLoading: false,
+        sourceReceived: receivedList,
         receivedList,
+        sourceSent: sentList,
         sentList,
+        sourceFriend: friendList,
         friendList
       });
     }).catch(function(error) { self.setState({ otherTabLoading: false }); });
@@ -245,27 +264,35 @@ class Connections extends React.Component {
     );
   }
 
+  handleSearchChange(e){
+    this.setState({searchValue: e.target.value});
+  }
+
+  handleSubmit(e, activeTab){
+    this.searchConnection(activeTab);
+  }
+
   renderMiddle() {
     return (
       <div>  
         <div className="col-box-wp mb-20 p-0" style={{ float: 'none' }}>
           <ul className="tab-wp">
             <li className={this.state.activeTabName === 'All' ? 'active' : ''}>
-              <a href="javascript:;" onClick={() => this.setState({ activeTabName: 'All' })}>All</a>
+              <a href="javascript:;" onClick={() => this.setState({ activeTabName: 'All', allFriendList: this.state.sourceAllFriends })}>All</a>
             </li>
             <li className={this.state.activeTabName === 'Connections' ? 'active' : ''}>
-              <a href="javascript:;" onClick={() => this.setState({ activeTabName: 'Connections' })}>Connections</a>
+              <a href="javascript:;" onClick={() => this.setState({ activeTabName: 'Connections', friendList: this.state.sourceFriend })}>Connections</a>
             </li>
             <li className={this.state.activeTabName === 'Sent' ? 'active' : ''}>
-              <a href="javascript:;" onClick={() => this.setState({ activeTabName: 'Sent' })}>Sent</a>
+              <a href="javascript:;" onClick={() => this.setState({ activeTabName: 'Sent', sentList: this.state.sourceSent })}>Sent</a>
             </li>
             <li className={this.state.activeTabName === 'Received' ? 'active' : ''}>
-              <a href="javascript:;" onClick={() => this.setState({ activeTabName: 'Received' })}>Received</a>
+              <a href="javascript:;" onClick={() => this.setState({ activeTabName: 'Received', receivedList: this.state.sourceReceived })}>Received</a>
             </li>
             <div className="friends-search-container">
-              <input type="text" placeholder="SEARCH.." name="search" />
-              <button type="submit">
-                <i className="fa fa-search" style={{color: "#9601a3"}}></i>
+              <input type="text" placeholder="SEARCH.." name="search" onChange={this.handleSearchChange.bind(this)} />
+              <button type="submit" onClick={(e) => this.handleSubmit(e, this.state.activeTabName)}>
+                <i className="fa fa-search" style={{color: "#9601a3"}} ></i>
               </button>
             </div>
           </ul>
@@ -275,7 +302,7 @@ class Connections extends React.Component {
             {this.state.activeTabName === 'All' && this.renderAllTab()}
             <ScrollHandle 
               progress={this.state.allTabLoading}
-              active={this.state.moreSoqqlersToFetch && this.state.activeTabName === 'All'}
+              active={this.state.moreSoqqlersToFetch && this.state.activeTabName === 'All' && !this.state.searchValue}
               onActive={this.fetchMoreSoqqlers}/>
           </div>
           <div style={{ display: this.state.activeTabName === 'Connections' ? 'block' : 'none' }}>
@@ -290,6 +317,59 @@ class Connections extends React.Component {
         </div>
       </div>
     );
+  }
+
+  searchConnection(activeTab){
+     let searchResult = [];
+     if(activeTab == 'All'){
+        const searchUrl = `${ConfigMain.getBackendURL()}/searchSoqqlers`;
+       
+        if(this.state.searchValue){
+          this.setState({ 
+            allTabLoading: true, 
+            allFriendList: []
+          });
+          Axios.get(searchUrl, {
+            params: {
+              currentUser: this.props.currentUserId,
+              searchValue: this.state.searchValue,
+            },
+          }).then(response => {
+            if (response.data.length > 0) {
+              this.setState({
+                allTabLoading: false,
+                allFriendList: response.data,
+              });
+            } else {
+              this.setState({ allTabLoading: false });
+            }
+          }).catch(error => {
+            this.setState({ allTabLoading: false });      
+          });
+        } else {
+           this.setState({
+              allFriendList: this.state.sourceAllFriends,
+              searchValue: ''
+           })
+        }
+
+     } else if (activeTab == 'Connections'){
+         searchResult = this.state.sourceFriend.filter(connection => this.searchCondition(connection, this.state.searchValue));
+         this.setState({ friendList: searchResult })
+
+     } else if (activeTab == 'Sent'){
+         searchResult = this.state.sourceSent.filter(connection => this.searchCondition(connection, this.state.searchValue));
+         this.setState({ sentList: searchResult })
+
+      } else if (activeTab == 'Received'){
+         searchResult = this.state.sourceReceived.filter(connection =>  this.searchCondition(connection, this.state.searchValue))
+         this.setState({ receivedList: searchResult })
+    }
+  }
+
+  searchCondition(sourceVal, searchVal){
+    return sourceVal.firstName && sourceVal.firstName.toLowerCase().indexOf(searchVal.toLowerCase()) != -1 || 
+    sourceVal.lastName && sourceVal.lastName.toLowerCase().indexOf(searchVal.toLowerCase()) != -1 || searchVal == '';
   }
 
   render() {

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
+
 class StoryItem extends Component {
   constructor (props) {
     super(props);
 
     this.state = {
-      data: this.props.data
+      data: this.props.data,
+      signUpText: 'Sign up',
     };
   }
 
@@ -39,6 +41,16 @@ class StoryItem extends Component {
     return rewardDisplay;
   }
 
+  signUp(){
+    const type = this.state.data._objective ? this.state.data._objective.name : '';
+    if(type == 'Decode' || type == 'Illuminate' || type == 'Deepdive'){
+      this.props.onSignup(this.state.data);
+      this.setState({
+        signUpText: 'Task Created'
+      })
+    }
+  }
+
   render () {
     return (
       <div className={'col-box-wp black-bg ' + this.getShadow()}>
@@ -62,7 +74,7 @@ class StoryItem extends Component {
         <div className='img-box-wp'>
           <img
             src={
-              'https://s3.us-east-2.amazonaws.com/admin.soqqle.com/skillImages/' +
+              'https://s3.us-east-2.amazonaws.com/admin.soqqle.com/storyImages/' +
               _.get(this, 'state.data._id')
             }
             alt=''
@@ -84,8 +96,8 @@ class StoryItem extends Component {
                   {`${_.get(this, 'state.data.refresh', '')}: 0/
                     ${_.get(this, 'state.data.quota', '0')} completed`}
                 </span>
-                <a href='#' className='btn-join pull-right'>
-                  Sign Up
+                <a href='javascript:void(0)' style={{pointerEvents: this.state.signUpText != 'Sign up' ? 'none' : ''}} onClick={() => this.signUp()} className='btn-join pull-right'>
+                  {this.state.signUpText}
                 </a>
               </p>
             </div>

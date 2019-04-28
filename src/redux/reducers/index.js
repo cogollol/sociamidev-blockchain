@@ -18,8 +18,9 @@ import { userFriendsActivities } from './activities';
 import { characterCreation, characterCreationData } from './characterCreation';
 import { accounting } from './accounting';
 import { progression } from './progression';
-import { achievements, achievementGroups, addAchievementGroup, updateAchievementGroup } from './achievements';
+import { achievements, achievementGroups, addAchievementGroup, updateAchievementGroup, challengeAchievements } from './achievements';
 import { timers } from './timers';
+import { admin } from './admin';
 import { teams } from './teams';
 import { articles } from './articles';
 import { houses } from './houses';
@@ -33,6 +34,7 @@ export default combineReducers({
   isFetchInProgress,
   searchResults,
   userProfile,
+  admin,
   userFriends,
   userFriendsActivities,
   bookmarks,
@@ -53,6 +55,7 @@ export default combineReducers({
   accounting,
   progression,
   achievements,
+  challengeAchievements,
   achievementGroups,
   addAchievementGroup,
   updateAchievementGroup,

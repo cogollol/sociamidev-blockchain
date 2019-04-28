@@ -45,6 +45,23 @@ class HomePage extends Component {
     this.setPostInputRef = element => {
       this.postInput = element;
     };
+       if(localStorage.getItem('login_type')) {
+        mixpanel.identify(this.props.userProfile.email);
+        mixpanel.people.set({
+    "$email": this.props.userProfile.email,
+    "$last_login": new Date(),
+    "house": this.props.userProfile.character ?  this.props.userProfile.character.characterName : '',
+    "name": this.props.userProfile.firstName + ' ' + this.props.userProfile.lastName,
+    "login_type": localStorage.getItem('login_type')            
+});
+        mixpanel.track('Login', {
+         'email': this.props.userProfile.email,
+         'name': this.props.userProfile.firstName + ' ' + this.props.userProfile.lastName,
+         'login_type': localStorage.getItem('login_type'),
+         'house': this.props.userProfile.character ?  this.props.userProfile.character.characterName : ''
+        });
+      localStorage.removeItem('login_type');
+    }
   }
 
   createHousePost() {
@@ -112,16 +129,12 @@ class HomePage extends Component {
   }
 
   fetchLink(link) {
-    const linkMetaScraperEndpoint = `${ConfigMain.getLinkScraperServiceURL()}?url=${link}`;
+    const linkMetaScraperEndpoint = `${ConfigMain.getBackendURL()}/metadata?url=${link}`;
 
     this.loadingLinkPreview(true);
     Axios.get(linkMetaScraperEndpoint)
       .then(({ data }) => {
-        if (data.result.status == 'OK') {
           this.showLinkPreview(data.meta);
-        } else {
-          this.loadingLinkPreview(false)
-        }
       })
       .catch(error => this.loadingLinkPreview(false));
   }
@@ -142,6 +155,15 @@ class HomePage extends Component {
     };
 
     this.setState({ postLink: currentPostLinkState });
+  }
+
+  uploadFile() {
+
+    let data = new FormData();
+    let fileData = this.fileUpload.files[0];
+    data.append("csv", fileData);
+    //this.data = event.target.result;
+    console.log("test")
   }
 
   componentDidMount() {
@@ -185,9 +207,10 @@ class HomePage extends Component {
                     <div style={{marginTop: '15px'}}>
                       <ul style={{paddingLeft: '20px'}}>
                         <li style={{display: 'inline-block', listStyle: 'none'}}>
-                          <a href="#">
+                          <label htmlFor="upload-input">
                             <i style={{color: 'rgb(150, 1, 163)', fontSize: '16px'}} className="fa fa-camera"></i>
-                          </a>
+                            <input id="upload-input" name="file" type="file" accept="image/gif,image/jpeg,image/png,image/jpg" ref={(ref) => this.fileUpload = ref} style={{display: 'none'}} onChange={value => this.uploadFile()} /> 
+                          </label>
                         </li>
                         <li style={{display: 'inline-block', listStyle: 'none', paddingLeft: '20px'}}>
                           <a href="#">

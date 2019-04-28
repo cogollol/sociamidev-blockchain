@@ -140,6 +140,8 @@ export const TASK_ACTIVITY_UNLOCK_REQS_FETCH_COMPLETE =
 // Achievements
 export const FETCH_ACHIEVEMENTS_INITIATE = 'fetch_achievements_initiate';
 export const FETCH_ACHIEVEMENTS_COMPLETE = 'fetch_achievements_complete';
+export const FETCH_CHALLENGE_ACHIEVEMENTS_INITIATE = 'fetch_challenge_achievements_initiate';
+export const FETCH_CHALLENGE_ACHIEVEMENTS_COMPLETE = 'fetch_challenge_achievements_complete';
 export const FETCH_ACHIEVEMENT_GROUPS_INITIATE = 'fetch_achievement_groups_initiate';
 export const FETCH_ACHIEVEMENT_GROUPS_COMPLETE = 'fetch_achievement_groups_complete';
 export const ADD_ACHIEVEMENT_GROUP_INITIATE = 'add_achievement_group_initiate';
@@ -188,8 +190,27 @@ export const UPDATE_COMPANY_COMPLETE = 'update_company_complete';
 // Company
 export const FETCH_SKILLS_INITIATE = 'fetch_skills_initiate';
 export const FETCH_SKILLS_COMPLETE = 'fetch_skills_complete';
+export const FETCH_CHALLENGE_STORY_INITIATE = 'fetch_challenges_story_initiate';
+export const FETCH_CHALLENGE_STORY_COMPLETE = 'fetch_challenges_story_complete';
+export const UPDATE_SKILLS_INITIATE = 'update_skills_initiate';
+export const UPDATE_SKILLS_COMPLETE = 'update_skills_complete';
+export const SAVE_SKILLS_INITIATE = 'save_skills_initiate';
+export const SAVE_SKILLS_COMPLETE = 'save_skills_complete';
+export const DELETE_SKILLS_INITIATE = 'delete_skills_initiate';
+export const DELETE_SKILLS_COMPLETE = 'delete_skills_complete';
 
 export const LOAD_ACTIVATE_URL = 'load_activate_url';
 
 //Language
 export const UPDATE_SELECTED_LANGUAGE = 'update_selected_language';
+
+//Admin
+
+export const FETCH_USER_GUIDES_INITIATE = 'fetch_user_guides_initiate';
+export const FETCH_USER_GUIDES_COMPLETE = 'fetch_user_guides_complete';
+export const UPDATE_USER_GUIDES_INITIATE = 'update_user_guides_initiate';
+export const UPDATE_USER_GUIDES_COMPLETE = 'update_user_guides_complete';
+export const ADD_USER_GUIDES_INITIATE = 'add_user_guides_initiate';
+export const ADD_USER_GUIDES_COMPLETE = 'add_user_guides_complete';
+export const DELETE_USER_GUIDES_INITIATE = 'delete_user_guides_initiate';
+export const DELETE_USER_GUIDES_COMPLETE = 'delete_user_guides_complete';

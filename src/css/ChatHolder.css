@@ -85,6 +85,7 @@
   display: inline-block;
   border-right: 1px solid #0690f7;
   padding: 15px 25px;
+  overflow-y: scroll;
 }
 .chat-ChatRightSideHolder{
   width: calc(100% - 365px);
@@ -92,7 +93,7 @@
   position: relative;
 }
 .chat-ChatLeftSideHolder .top-header{
-  padding-bottom: 10px;
+  padding: 5px 0px;
   border-bottom: 1px solid #383838;
   display: block;
   line-height: 36px;
@@ -204,6 +205,15 @@
   display: flex;
   justify-content: space-between;
 }
+.chat-ChatRightSideHolder .non-friend{
+  color: white;
+  position: sticky;
+  font-size: 15px;
+  font-weight: bold;
+  width: 100%;
+  top: 10px;
+  text-align: center;
+}
 .chat-ChatRightSideHolder .right-middle-messages{
   height: calc(100% - 112px);
   overflow: auto;
@@ -246,6 +256,9 @@
   width: 35px;
   text-align: center;
   font-size: 18px;
+  background: transparent;
+  padding-left: 3px;
+  margin-right: 12px;
 }
 
 .chat-ChatRightSideHolder .right-middle-messages .message-box{
@@ -327,4 +340,10 @@
   margin-top: -10px;
   background-color: black;
   padding: 0 40px;
+}
+.chat-ChatRightSideHolder .right-middle-messages .message-box .header .chat-you{
+  color: blue;
+}
+.chat-ChatRightSideHolder .right-middle-messages .message-box .header .chat-me{
+  color: green;
 }
